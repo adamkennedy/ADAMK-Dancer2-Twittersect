@@ -14,13 +14,13 @@ ok(-f $config, "Found config file $config");
 my $twitter = ADAMK::Dancer2::Twittersect->new($config);
 isa_ok($twitter, "ADAMK::Dancer2::Twittersect");
 
-my $user = $twitter->lookup_user_by_name("adam_at_alias");
+my $user = $twitter->get_user_by_name("adam_at_alias");
 ok(_HASH($user), "Found user information");
 
-my $followers = $twitter->followers_ids("adam_at_alias");
+my $followers = $twitter->get_followers_by_id("adam_at_alias");
 ok(_ARRAY($followers), "Found follower information");
 
-my $users = $twitter->lookup_users_by_id($followers);
+my $users = $twitter->get_users_by_id($followers);
 ok(_ARRAY($users), "Found user information");
 
 is(scalar(@$followers), scalar(@$users), "All users exist");

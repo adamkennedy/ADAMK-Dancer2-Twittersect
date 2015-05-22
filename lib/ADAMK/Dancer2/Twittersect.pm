@@ -50,23 +50,21 @@ sub new {
 	return $self;
 }
 
-sub follower_intersection {
+sub get_intersected_followers {
 	my $self  = shift;
-	my $user1 = shift;
-	my $user2 = shift;
+	my $name1 = shift;
+	my $name2 = shift;
 
 	# Get the followers
-	my $followers1 = $self->followers_id($user1);
-	my $followers2 = $self->followers_id($user2);
+	my $followers1 = $self->get_followers_by_id($name1);
+	my $followers2 = $self->get_followers_by_id($name2);
 
 	# Find the intersection
 	my %filter    = map  { $_ => 1     } @$followers1;
 	my @intersect = grep { $filter{$_} } @$followers1;
 
 	# Get the user information
-	my $users = $self->lookup_users_by_id(@intersect);
-
-	return $users;
+	return $self->get_users_by_id(@intersect);
 }
 
 
@@ -76,7 +74,7 @@ sub follower_intersection {
 ######################################################################
 # Twitter Wrapper Methods
 
-sub lookup_user_by_name {
+sub get_user_by_name {
 	my $self = shift;
 	my $name = shift;
 
@@ -95,7 +93,7 @@ sub lookup_user_by_name {
 	return $users->[0];
 }
 
-sub lookup_users_by_id {
+sub get_users_by_id {
 	my $self = shift;
 	my $ids  = shift;
 
@@ -114,7 +112,7 @@ sub lookup_users_by_id {
 	return $users;
 }
 
-sub followers_ids {
+sub get_followers_by_id {
 	my $self = shift;
 	my $name = shift;
 
