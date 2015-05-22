@@ -23,14 +23,4 @@ sub new {
 	return $self;
 }
 
-sub run {
-	my $self = shift;
-
-	get '/' => sub {
-		return "Hello World";
-	};
-
-	dance;
-}
-
 1;

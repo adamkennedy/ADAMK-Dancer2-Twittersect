@@ -1,0 +1,26 @@
+#!/usr/bin/perl
+
+use 5.14.0;
+use strict;
+use warnings;
+use File::Spec   0.80 ();
+use Config::Tiny 2.12 ();
+use Dancer2      0.160000;
+use ADAMK::Dancer2::Twittersect;
+
+set 'show_errors'  => 1;
+set 'startup_info' => 1;
+set 'warnings'     => 1;
+set 'logger'       => 'console';
+set 'log'          => 'debug';
+set 'template'     => 'template_toolkit';
+# set 'database'     => File::Spec->catfile(File::Spec->tmpdir(), 'dancr.db');
+# set 'session'      => 'Simple';
+
+my $config = ADAMK::Dancer2::Twittersect::Config->new("twittersect.conf");
+
+get '/' => sub {
+	template "home.tt", {};
+};
+
+dance;

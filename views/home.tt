@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Twittersect</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  </head>
+  <body>
+
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Twittersect</h1>
+        <p>This Dancer2 application takes two twitter usernames and finds the intersection of their followers</p>
+      </div>
+    </div>
+
+  <form class="form-horizontal" action=>
+    <div class="form-group">
+        <label for="user1" class="control-label col-xs-2">Twitter User 1</label>
+        <div class="col-xs-10">
+            <input type="text" class="form-control" id="user1" placeholder="username1">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="user2" class="control-label col-xs-2">Twitter User 2</label>
+        <div class="col-xs-10">
+            <input type="text" class="form-control" id="user2" placeholder="username2">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-offset-2 col-xs-10">
+            <button type="submit" class="btn btn-primary">Intersect Followers</button>
+        </div>
+    </div>
+  </form>
+
+  </body>
+</html>
