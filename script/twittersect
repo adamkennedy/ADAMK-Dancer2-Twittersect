@@ -1,0 +1,15 @@
+#!/usr/bin/perl
+
+use 5.14.0;
+use strict;
+use warnings;
+use File::Spec;
+use Config::Tiny;
+use Dancer2;
+use ADAMK::Dancer2::Twittersect;
+
+my $server = ADAMK::Dancer2::Twittersect->new(
+	config => Config::Tiny->read("twittersect.conf")
+);
+
+$server->run;
