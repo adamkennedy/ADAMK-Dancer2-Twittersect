@@ -13,11 +13,11 @@ set 'startup_info' => 1;
 set 'warnings'     => 1;
 set 'logger'       => 'console';
 set 'log'          => 'debug';
-set 'template'     => 'template_toolkit';
+set 'template'     => 'tiny';
 # set 'database'     => File::Spec->catfile(File::Spec->tmpdir(), 'dancr.db');
 # set 'session'      => 'Simple';
 
-my $config = ADAMK::Dancer2::Twittersect::Config->new("twittersect.conf");
+my $twitter = ADAMK::Dancer2::Twittersect->new("twittersect.conf");
 
 get '/' => sub {
 	template "home.tt", {};
