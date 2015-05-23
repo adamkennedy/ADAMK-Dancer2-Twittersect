@@ -7,8 +7,30 @@
     <title>Twittersect</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   </head>
-  <body>
 
+  <style type="text/css">
+    h2 img {
+      margin-right: 0.5em;
+      vertical-align: bottom;
+    }
+
+    li img {
+      margin-right: 0.2em;
+      height: 24px;
+      width: 24px;
+      vertical-align: bottom;
+    }
+
+    a:hover {
+      text-decoration: none;
+    }
+
+    a:active {
+      text-decoration: none;
+    }
+  </style>
+
+  <body>
     <div class="jumbotron">
       <div class="container">
         <h1>Twittersect</h1>
@@ -16,17 +38,26 @@
       </div>
     </div>
 
-  <form class="form-horizontal" action=>
+  <div class="container">
+  <form class="form-horizontal" method="POST">
+    [% IF error %]
+    <div class="alert alert-danger" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      <span class="sr-only">Error:</span>
+      <span style="white-space: pre-wrap">[% error %]</span>
+    </div>
+    [% END %]
+
     <div class="form-group">
-        <label for="user1" class="control-label col-xs-2">Twitter User 1</label>
+        <label for="name1" class="control-label col-xs-2">Twitter Name 1</label>
         <div class="col-xs-10">
-            <input type="text" class="form-control" id="user1" placeholder="username1">
+            <input type="text" class="form-control" id="name1" name="name1"[% IF user1 %] value="[% user1.screen_name %]"[% END %] placeholder="screenname">
         </div>
     </div>
     <div class="form-group">
-        <label for="user2" class="control-label col-xs-2">Twitter User 2</label>
+        <label for="name2" class="control-label col-xs-2">Twitter Name 2</label>
         <div class="col-xs-10">
-            <input type="text" class="form-control" id="user2" placeholder="username2">
+            <input type="text" class="form-control" id="name2" name="name2"[% IF user2 %] value="[% user2.screen_name %]"[% END %] placeholder="screenname">
         </div>
     </div>
     <div class="form-group">
@@ -35,6 +66,42 @@
         </div>
     </div>
   </form>
+  </div>
+
+  [% IF user1 %]
+    <hr>
+    <div class="container">
+      <h2><img src="[% user1.profile_image_url %]"><a href="https://twitter.com/intent/user?user_id=[% user1.id_str %]">[% user1.screen_name %]</a></h2>
+      <p>Followers: [% user1.followers_count %]</p>
+    </div>
+  [% END %]
+
+  [% IF user2 %]
+    <hr>
+    <div class="container">
+      <h2><img src="[% user2.profile_image_url %]"><a href="https://twitter.com/intent/user?user_id=[% user2.id_str %]">[% user2.screen_name %]</a></h2>
+      <p>Followers: [% user2.followers_count %]</p>
+    </div>
+  [% END %]
+
+  [% IF intersect %]
+    <hr>
+    <div class="container">
+      [% IF intersect_count %]
+        <h2>Common Followers: [% intersect_count %]</h2>
+        <ul>
+          [% FOREACH user IN intersect %]
+          <li>
+            <img src="[% user.profile_image_url %]">
+            <a href="https://twitter.com/intent/user?user_id=[% user.id_str %]">[% user.screen_name %]</a>
+          </li>
+          [% END %]
+        </ul>
+      [% ELSE %]
+        <h2>No Common Followers</h2>
+      [% END %]
+    </div>
+  [% END %]
 
   </body>
 </html>

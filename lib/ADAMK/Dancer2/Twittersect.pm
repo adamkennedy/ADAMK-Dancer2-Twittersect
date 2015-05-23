@@ -78,38 +78,24 @@ sub get_user_by_name {
 	my $self = shift;
 	my $name = shift;
 
-	my $users;
-	eval {
-		$users = $self->twitter->lookup_users({ screen_name => [ $name ] });
+	my $result = eval {
+		$self->twitter->lookup_users({ screen_name => [ $name ] })->[0];
 	};
-	if ( my $err = $@ ) {
-		die $err unless _INSTANCE($err, "Net::Twitter::Error");
-
-		warn "HTTP Response Code: ", $err->code, "\n",
-		     "HTTP Message......: ", $err->message, "\n",
-		     "Twitter error.....: ", $err->error, "\n";
+	if ($@) {
+		if (_INSTANCE($@, "Net::Twitter::Error") and $@->error =~ /No user matches for specified terms/) {
+			$result = undef;
+		} else {
+			die $@;
+		}
 	}
 
-	return $users->[0];
+	return $result;
 }
 
 sub get_users_by_id {
 	my $self = shift;
 	my $ids  = shift;
-
-	my $users;
-	eval {
-		$users = $self->twitter->lookup_users({ user_id => $ids });
-	};
-	if ( my $err = $@ ) {
-		die $err unless _INSTANCE($err, "Net::Twitter::Error");
-
-		warn "HTTP Response Code: ", $err->code, "\n",
-		     "HTTP Message......: ", $err->message, "\n",
-		     "Twitter error.....: ", $err->error, "\n";
-	}
-
-	return $users;
+	return $self->twitter->lookup_users({ user_id => $ids });
 }
 
 sub get_followers_by_id {
@@ -122,10 +108,27 @@ sub get_followers_by_id {
 	});
 
 	if ($result->{next_cursor} or $result->{previous_cursor}) {
-		die "Only supports users with less than 5000 followers";
+		throw ADAMK::Dancer2::Twittersect::Exception "This application only supports Twitter users with less than 5000 followers (to prevent hitting rate limits)";
 	}
 
 	return $result->{ids};
+}
+
+
+
+
+
+######################################################################
+# Simple Exception Object
+
+package ADAMK::Dancer2::Twittersect::Exception;
+
+use Object::Tiny 1.08 qw{
+	message
+};
+
+sub throw {
+	die shift->new(message => shift);
 }
 
 1;

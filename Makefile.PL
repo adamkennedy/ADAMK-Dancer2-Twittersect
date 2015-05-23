@@ -2,4 +2,7 @@ use inc::Module::Install::DSL 1.06;
 
 all_from       lib/ADAMK/Dancer2/Twittersect.pm
 requires_from  lib/ADAMK/Dancer2/Twittersect.pm
-test_requires  Test::More 0.42
+requires_from  twittersect
+test_requires  Test::More   1.001013
+test_requires  File::Spec   0.80
+test_requires  Params::Util 1.04

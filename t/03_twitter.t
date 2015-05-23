@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Test::More 1.001013 tests => 6;
 use File::Spec 0.80 ();
-use Params::Util ':ALL';
+use Params::Util 1.04 ':ALL';
 
 use ADAMK::Dancer2::Twittersect;
 
