@@ -1,134 +1,90 @@
 package ADAMK::Dancer2::Twittersect;
 
+use 5.14.0;
 use strict;
 use warnings;
+use Try::Tiny    0.22;
 use YAML::Tiny   1.50 ();
 use Params::Util 1.04 ':ALL';
 use Net::Twitter 4.01010 ();
+use Dancer2      0.160000;
 
-use Object::Tiny 1.08 qw{
-	consumer_api
-	consumer_secret
-	access_token
-	twitter
-};
+use ADAMK::Dancer2::Twittersect::Twitter;
+use ADAMK::Dancer2::Twittersect::Exception;
 
 our $VERSION = '0.01';
 
-sub new {
-	my $class = shift;
-	my $file  = shift;
+set 'show_errors'  => 1;
+set 'startup_info' => 1;
+set 'warnings'     => 1;
+set 'logger'       => 'console';
+set 'log'          => 'debug';
+set 'template'     => 'tiny';
 
-	# Is the config even roughly correct
-	my $yaml  = YAML::Tiny->read($file);
-	unless ($yaml->[0] and _HASH($yaml->[0])) {
-		die "Config file does not have keys";
-	}
+my $twitter = ADAMK::Dancer2::Twittersect::Twitter->new("twittersect.conf");
 
-	my $self = $class->SUPER::new(
-		%{$yaml->[0]}
-	);
-
-	# Validate
-	unless ($self->consumer_api) {
-		die "Config file does not provide a consumer_api";
-	}
-	unless ($self->consumer_secret) {
-		die "Config file does not provide a consumer_secret";
-	}
-
-	# Create the twitter connector
-	$self->{twitter} = Net::Twitter->new(
-		traits              => ["API::RESTv1_1", "AppAuth"],
-		consumer_key        => $self->consumer_api,
-		consumer_secret     => $self->consumer_secret,
-	);
-
-	# Get the Application-Only access token
-	$self->{access_token} = $self->twitter->request_access_token;
-
-	return $self;
+# Convenience function
+sub throw ($) {
+	ADAMK::Dancer2::Twittersect::Exception->throw(shift);
 }
 
-sub get_intersected_followers {
-	my $self  = shift;
-	my $name1 = shift;
-	my $name2 = shift;
-
-	# Get the followers
-	my $followers1 = $self->get_followers_by_id($name1);
-	my $followers2 = $self->get_followers_by_id($name2);
-
-	# Find the intersection
-	my %filter    = map  { $_ => 1     } @$followers1;
-	my @intersect = grep { $filter{$_} } @$followers1;
-
-	# Get the user information
-	return $self->get_users_by_id(@intersect);
+# Params::Util style validator function
+sub _SCREENNAME {
+	(defined $_[0] and $_[0] =~ /[a-zA-Z0-9_]{1,15}/) ? $_[0] : undef;
 }
 
-
-
-
-
-######################################################################
-# Twitter Wrapper Methods
-
-sub get_user_by_name {
-	my $self = shift;
-	my $name = shift;
-
-	my $result = eval {
-		$self->twitter->lookup_users({ screen_name => [ $name ] })->[0];
-	};
-	if ($@) {
-		if (_INSTANCE($@, "Net::Twitter::Error") and $@->error =~ /No user matches for specified terms/) {
-			$result = undef;
-		} else {
-			die $@;
-		}
-	}
-
-	return $result;
-}
-
-sub get_users_by_id {
-	my $self = shift;
-	my $ids  = shift;
-	return $self->twitter->lookup_users({ user_id => $ids });
-}
-
-sub get_followers_by_id {
-	my $self = shift;
-	my $name = shift;
-
-	my $result = $self->twitter->followers_ids({
-		screen_name => $name,
-		cursor      => -1,
-	});
-
-	if ($result->{next_cursor} or $result->{previous_cursor}) {
-		throw ADAMK::Dancer2::Twittersect::Exception "This application only supports Twitter users with less than 5000 followers (to prevent hitting rate limits)";
-	}
-
-	return $result->{ids};
-}
-
-
-
-
-
-######################################################################
-# Simple Exception Object
-
-package ADAMK::Dancer2::Twittersect::Exception;
-
-use Object::Tiny 1.08 qw{
-	message
+get '/' => sub {
+	template "index", {};
 };
 
-sub throw {
-	die shift->new(message => shift);
-}
+post '/' => sub {
+	my %vars = ();
+	try {
+		# Lookup the users
+		$vars{name1} = _SCREENNAME(params->{name1});
+		$vars{name2} = _SCREENNAME(params->{name2});
+		if ($vars{name1}) {
+			$vars{user1} = $twitter->get_user_by_name($vars{name1});
+		}
+		if ($vars{name2}) {
+			$vars{user2} = $twitter->get_user_by_name($vars{name2});
+		}
 
-1;
+		# User related errors before we intersect
+		unless ($vars{name1}) {
+			throw "First twitter name missing or invalid";
+		}
+		unless ($vars{name2}) {
+			throw "Second twitter name missing or invalid";
+		}
+		unless ($vars{user1}) {
+			throw "First twitter user ($vars{name1}) does not exist";
+		}
+		unless ($vars{user2}) {
+			throw "Second twitter user ($vars{name2}) does not exist";
+		}
+
+		# Find the user intersection
+		$vars{intersect} = $twitter->get_intersected_followers($vars{name1}, $vars{name2});
+		$vars{intersect_count} = scalar @{$vars{intersect}};
+
+	} catch {
+		# Enhance various errors
+		if (_INSTANCE($_, "ADAMK::Dancer2::Twittersect::Exception")) {
+			$vars{error} = $_->message;
+
+		} elsif (_INSTANCE($_, "Net::Twitter::Error")) {
+			$vars{error} = "Twitter API Error:\n"
+				. "HTTP Response Code: " . $_->code . "\n"
+				. "HTTP Message......: " . $_->message . "\n"
+				. "Twitter error.....: " . $_->error . "\n";
+
+		} else {
+			$vars{error} = "Unmanaged Error:\n$_";
+		}
+	};
+
+	template "index", \%vars;
+};
+
+true;

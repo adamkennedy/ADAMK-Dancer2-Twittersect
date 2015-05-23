@@ -14,7 +14,7 @@
       vertical-align: bottom;
     }
 
-    li img {
+    p img {
       margin-right: 0.2em;
       height: 24px;
       width: 24px;
@@ -34,7 +34,7 @@
     <div class="jumbotron">
       <div class="container">
         <h1>Twittersect</h1>
-        <p>This Dancer2 application takes two twitter usernames and finds the intersection of their followers</p>
+        <p>This Dancer2 application takes two twitter screen names and finds the intersection of their followers</p>
       </div>
     </div>
 
@@ -89,14 +89,13 @@
     <div class="container">
       [% IF intersect_count %]
         <h2>Common Followers: [% intersect_count %]</h2>
-        <ul>
+        <p>
           [% FOREACH user IN intersect %]
-          <li>
             <img src="[% user.profile_image_url %]">
             <a href="https://twitter.com/intent/user?user_id=[% user.id_str %]">[% user.screen_name %]</a>
-          </li>
+            <br/>
           [% END %]
-        </ul>
+        </p>
       [% ELSE %]
         <h2>No Common Followers</h2>
       [% END %]
