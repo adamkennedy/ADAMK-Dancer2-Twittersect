@@ -212,10 +212,25 @@ ADAMK::Dancer2::Twittersect - Web application to intersect twitter followers for
 C<ADAMK::Dancer2::Twittersect is a small Dancer2 demo application that sheds a number
 of normal Dancer elements in the interest of being very very small.
 
-It contains no C<environment> directories, no C<public> directories, a single view
-and a single custom config file for security data with all the typical configuration
-inlined into the application.
+It contains no C<environment> directories, no C<public> directories, no <views> directory,
+and has all configuiration and view data embedded in the main module.
+
+=head2 INSTALLATION
 
 
 
-=head1 
+=head1 AUTHOR
+
+Adam Kennedy E<lt>adamk@cpan.orgE<gt>
+
+=head1 COPYRIGHT
+
+Copyright 2015 Adam Kennedy.
+
+This program is free software; you can redistribute
+it and/or modify it under the same terms as Perl itself.
+
+The full text of the license can be found in the
+LICENSE file included with this module.
+
+=cut

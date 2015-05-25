@@ -1,5 +1,6 @@
 use inc::Module::Install::DSL 1.06;
 
+repository     https://github.com/adamkennedy/ADAMK-Dancer2-Twittersect.git
 all_from       lib/ADAMK/Dancer2/Twittersect.pm
 requires_from  lib/ADAMK/Dancer2/Twittersect.pm
 requires_from  bin/twittersect
