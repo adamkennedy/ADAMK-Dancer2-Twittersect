@@ -230,21 +230,45 @@ true;
 
 =head1 NAME
 
-ADAMK::Dancer2::Twittersect - Web application to intersect twitter followers for two users
+ADAMK::Dancer2::Twittersect - Demonstration web application that finds the
+intersection of the twitter followers for two users
 
 =head1 DESCRIPTION
 
-C<ADAMK::Dancer2::Twittersect is a small Dancer2 demo application that sheds a number
-of normal Dancer elements in the interest of being very very small.
+C<ADAMK::Dancer2::Twittersect is a small L<Dancer2> demo application that shows
+how to avoid the normal Dancer directory structure entirely and embed an entire
+application within the module structure, while still retaining a test suite.
 
-It contains no C<environment> directories, no C<public> directories, no <views> directory,
-and has all configuiration and view data embedded in the main module.
+This is a great pattern to use for any small or trivial web applications that
+allows you to install the application to the system directly using normal CPAN
+client tools.
+
+All configuration and view data is embedded in the main module file. It contains
+no normal dancer config file, no F<environment> directories, no F<public>
+directory and no F<views> directory.
 
 =head2 INSTALLATION
 
-Install the distribution from the tarball directly from Github using C<cpanm>
+This application can be installed and run on any operating system.
+
+From the command line or unix shell, install the distribution from the tarball
+to the system directly from Github using C<cpanm>
 
   cpanm https://github.com/adamkennedy/ADAMK-Dancer2-Twittersect/archive/master.zip
+
+Next, create an security configuration file named F<twittersect.conf> containing
+a valid Twitter application API key and secret in YAML format like as follows.
+
+  ---
+  consumer_api: 123456789abcdefghijklmnop
+  consumer_secret: 123456789abcdefghijklmnop123456789abcdefghijklmnop
+
+Finally, launch the F<twittersect> application from the directory containing
+the configuration file. A message similar to the below should appear indicating
+the application has successfully started up.
+
+  twittersect
+  >> Dancer2 v0.160001 server 7204 listening on http://0.0.0.0:3000
 
 =head1 AUTHOR
 
