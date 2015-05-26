@@ -1,3 +1,6 @@
+# Don't ship the config file
+twittersect.conf
+
 # Standard MANIFEST.SKIP file
 # Copied from http://svn.ali.as/cpan/tools/shared/MANIFEST.SKIP
 

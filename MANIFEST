@@ -1,0 +1,23 @@
+bin/twittersect
+inc/Module/Install.pm
+inc/Module/Install/Base.pm
+inc/Module/Install/Can.pm
+inc/Module/Install/DSL.pm
+inc/Module/Install/Fetch.pm
+inc/Module/Install/Makefile.pm
+inc/Module/Install/Metadata.pm
+inc/Module/Install/Scripts.pm
+inc/Module/Install/Win32.pm
+inc/Module/Install/WriteAll.pm
+lib/ADAMK/Dancer2/Twittersect.pm
+lib/ADAMK/Dancer2/Twittersect/Exception.pm
+lib/ADAMK/Dancer2/Twittersect/Twitter.pm
+LICENSE
+Makefile.PL
+MANIFEST			This list of files
+META.yml
+t/01_compile.t
+t/02_constructor.t
+t/03_twitter.t
+t/04_intersect.t
+t/05_www.t
