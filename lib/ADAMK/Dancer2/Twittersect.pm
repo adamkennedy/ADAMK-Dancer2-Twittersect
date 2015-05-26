@@ -1,6 +1,6 @@
 package ADAMK::Dancer2::Twittersect;
 
-use 5.14.0;
+use 5.010;
 use strict;
 use warnings;
 use Try::Tiny    0.22;

@@ -1,6 +1,6 @@
 package ADAMK::Dancer2::Twittersect::Exception;
 
-use 5.14.0;
+use 5.010;
 use strict;
 use warnings;
 
