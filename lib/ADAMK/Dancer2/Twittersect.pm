@@ -95,6 +95,10 @@ use constant INDEX_TT => \<<END_TEMPLATE;
                 <b><a href="https://twitter.com/intent/user?user_id=[% user1.id_str %]">[% user1.screen_name %]</a></b>
                 <br/>
                 Followers: [% user1.followers_count %]
+                [% IF user1.status %]
+                  <br/>
+                  <pre>[% user1.status.text %]</pre>
+                [% END %]
               </p>
             [% END %]
         </div>
@@ -112,6 +116,10 @@ use constant INDEX_TT => \<<END_TEMPLATE;
                 <b><a href="https://twitter.com/intent/user?user_id=[% user2.id_str %]">[% user2.screen_name %]</a></b>
                 <br/>
                 Followers: [% user2.followers_count %]
+                [% IF user2.status %]
+                  <br/>
+                  <pre>[% user2.status.text %]</pre>
+                [% END %]
               </p>
             [% END %]
         </div>
@@ -119,7 +127,7 @@ use constant INDEX_TT => \<<END_TEMPLATE;
 
     <div class="form-group">
         <div class="col-xs-offset-2 col-xs-10">
-            <button type="submit" class="btn btn-primary">Find Common Followers</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
         </div>
     </div>
   </form>
@@ -191,20 +199,23 @@ post '/' => sub {
 		unless ($vars{name1}) {
 			throw "First twitter name missing or invalid";
 		}
-		unless ($vars{name2}) {
-			throw "Second twitter name missing or invalid";
-		}
 		unless ($vars{user1}) {
 			throw "First twitter user ($vars{name1}) does not exist";
 		}
-		unless ($vars{user2}) {
-			throw "Second twitter user ($vars{name2}) does not exist";
+
+		# Supports the "if 1, if 2" logic with a single form
+		if (defined _STRING(params->{name2})) {
+			unless ($vars{name2}) {
+				throw "Second twitter name missing or invalid";
+			}
+			unless ($vars{user2}) {
+				throw "Second twitter user ($vars{name2}) does not exist";
+			}
+
+			# Find the user intersection
+			$vars{intersect} = $twitter->get_intersected_followers($vars{name1}, $vars{name2});
+			$vars{intersect_count} = scalar @{$vars{intersect}};
 		}
-
-		# Find the user intersection
-		$vars{intersect} = $twitter->get_intersected_followers($vars{name1}, $vars{name2});
-		$vars{intersect_count} = scalar @{$vars{intersect}};
-
 	} catch {
 		# Enhance various errors
 		if (_INSTANCE($_, "ADAMK::Dancer2::Twittersect::Exception")) {
