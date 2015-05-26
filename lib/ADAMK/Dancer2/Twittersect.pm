@@ -242,9 +242,9 @@ and has all configuiration and view data embedded in the main module.
 
 =head2 INSTALLATION
 
-Install the distribution from the tarball directly using cpanm
+Install the distribution from the tarball directly from Github using C<cpanm>
 
-  cpanm 
+  cpanm https://github.com/adamkennedy/ADAMK-Dancer2-Twittersect/archive/master.zip
 
 =head1 AUTHOR
 
