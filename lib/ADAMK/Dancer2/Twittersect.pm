@@ -246,7 +246,7 @@ intersection of the twitter followers for two users
 
 =head1 DESCRIPTION
 
-C<ADAMK::Dancer2::Twittersect is a small L<Dancer2> demo application that shows
+C<ADAMK::Dancer2::Twittersect> is a small L<Dancer2> demo application that shows
 how to avoid the normal Dancer directory structure entirely and embed an entire
 application within the module structure, while still retaining a test suite.
 
