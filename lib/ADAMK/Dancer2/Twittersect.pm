@@ -262,8 +262,13 @@ directory and no F<views> directory.
 
 This application can be installed and run on any operating system.
 
-From the command line or unix shell, install the distribution from the tarball
-to the system directly from Github using C<cpanm>
+First, you will need to install L<Net::Twitter> via C<cpan> (as it does not have
+a legal version number according to C<cpanm>
+
+  cpan Net::Twitter
+
+Next, from the command line or unix shell, install the distribution from the
+tarball to the system directly from Github using C<cpanm>
 
   cpanm https://github.com/adamkennedy/ADAMK-Dancer2-Twittersect/archive/master.zip
 
